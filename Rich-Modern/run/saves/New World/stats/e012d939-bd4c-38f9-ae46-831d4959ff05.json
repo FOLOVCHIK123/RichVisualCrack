@@ -1,0 +1,26 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:polar_bear_spawn_egg": 1
+    },
+    "minecraft:custom": {
+      "minecraft:sprint_one_cm": 605,
+      "minecraft:time_since_rest": 1086,
+      "minecraft:walk_one_cm": 715,
+      "minecraft:total_world_time": 1852,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 3736,
+      "minecraft:sneak_time": 9,
+      "minecraft:play_time": 1086,
+      "minecraft:damage_dealt": 110,
+      "minecraft:jump": 8,
+      "minecraft:time_since_death": 1086,
+      "minecraft:drop": 2
+    },
+    "minecraft:dropped": {
+      "minecraft:rabbit_hide": 1,
+      "minecraft:rabbit": 1
+    }
+  },
+  "DataVersion": 4671
+}

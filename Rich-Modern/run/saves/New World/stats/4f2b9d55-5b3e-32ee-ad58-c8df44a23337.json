@@ -1,0 +1,20 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:polar_bear_spawn_egg": 1
+    },
+    "minecraft:custom": {
+      "minecraft:sprint_one_cm": 1465,
+      "minecraft:time_since_rest": 1419,
+      "minecraft:walk_one_cm": 3076,
+      "minecraft:total_world_time": 1432,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 10840,
+      "minecraft:play_time": 1419,
+      "minecraft:damage_dealt": 215,
+      "minecraft:jump": 18,
+      "minecraft:time_since_death": 1419
+    }
+  },
+  "DataVersion": 4671
+}

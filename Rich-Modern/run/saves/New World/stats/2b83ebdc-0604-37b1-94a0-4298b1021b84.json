@@ -1,0 +1,35 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:interact_with_crafting_table": 1,
+      "minecraft:time_since_rest": 4956,
+      "minecraft:walk_one_cm": 2803,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 4956,
+      "minecraft:damage_dealt": 2422,
+      "minecraft:jump": 87,
+      "minecraft:time_since_death": 4956,
+      "minecraft:drop": 3,
+      "minecraft:sprint_one_cm": 4839,
+      "minecraft:open_chest": 2,
+      "minecraft:interact_with_smoker": 1,
+      "minecraft:total_world_time": 5270,
+      "minecraft:fly_one_cm": 25476
+    },
+    "minecraft:picked_up": {
+      "minecraft:cactus_flower": 1,
+      "minecraft:leather": 576,
+      "minecraft:arrow": 2,
+      "minecraft:bone": 2
+    },
+    "minecraft:dropped": {
+      "minecraft:bone": 2,
+      "minecraft:leather": 64
+    },
+    "minecraft:used": {
+      "minecraft:cactus_flower": 5,
+      "minecraft:netherite_sword": 22
+    }
+  },
+  "DataVersion": 4671
+}

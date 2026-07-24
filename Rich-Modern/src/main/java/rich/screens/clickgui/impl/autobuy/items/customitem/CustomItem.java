@@ -1,0 +1,196 @@
+package rich.screens.clickgui.impl.autobuy.items.customitem;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
+import com.google.common.collect.ImmutableMultimap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.component.type.PotionContentsComponent;
+import net.minecraft.component.type.ProfileComponent;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.text.Text;
+import rich.screens.clickgui.impl.autobuy.AutoBuyableItem;
+import rich.screens.clickgui.impl.autobuy.settings.AutoBuyItemSettings;
+import rich.util.config.impl.autobuyconfig.AutoBuyConfig;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public class CustomItem implements AutoBuyableItem {
+    private final String displayName;
+    private final NbtCompound nbt;
+    private final Item material;
+    private final int price;
+    private final PotionContentsComponent potionContents;
+    private final List<Text> loreTexts;
+    private final AutoBuyItemSettings settings;
+    private final boolean hasGlint;
+    private boolean enabled;
+
+    public CustomItem(String displayName, NbtCompound nbt, Item material, int price, PotionContentsComponent potionContents, List<Text> loreTexts) {
+        this(displayName, nbt, material, price, potionContents, loreTexts, shouldHaveGlint(material, displayName), false);
+    }
+
+    public CustomItem(String displayName, NbtCompound nbt, Item material, int price, PotionContentsComponent potionContents, List<Text> loreTexts, boolean hasGlint) {
+        this(displayName, nbt, material, price, potionContents, loreTexts, hasGlint, false);
+    }
+
+    public CustomItem(String displayName, NbtCompound nbt, Item material, int price, PotionContentsComponent potionContents, List<Text> loreTexts, boolean hasGlint, boolean canHaveQuantity) {
+        this.displayName = displayName;
+        this.nbt = nbt;
+        this.material = material;
+        this.price = price;
+        this.potionContents = potionContents;
+        this.loreTexts = loreTexts;
+        this.hasGlint = hasGlint;
+        this.settings = new AutoBuyItemSettings(price, material, displayName, canHaveQuantity);
+        AutoBuyConfig config = AutoBuyConfig.getInstance();
+        if (config.hasItemConfig(displayName)) {
+            this.enabled = config.isItemEnabled(displayName);
+        } else {
+            this.enabled = true;
+            config.loadItemSettings(displayName, price);
+        }
+    }
+
+    public CustomItem(String displayName, NbtCompound nbt, Item material, int price) {
+        this(displayName, nbt, material, price, null, null);
+    }
+
+    public CustomItem(String displayName, NbtCompound nbt, Item material, int price, boolean canHaveQuantity) {
+        this(displayName, nbt, material, price, null, null, shouldHaveGlint(material, displayName), canHaveQuantity);
+    }
+
+    public CustomItem(String displayName, NbtCompound nbt, Item material, int price, PotionContentsComponent potionContents, List<Text> loreTexts, int minQuantity) {
+        this(displayName, nbt, material, price, potionContents, loreTexts, shouldHaveGlint(material, displayName), true);
+    }
+
+    private static boolean shouldHaveGlint(Item material, String displayName) {
+        if (material == Items.TOTEM_OF_UNDYING || material == Items.ELYTRA) {
+            return false;
+        }
+        if (material == Items.NETHERITE_HELMET ||
+                material == Items.FISHING_ROD) {
+            return true;
+        }
+        if (displayName != null && displayName.contains("[★]")) {
+            if (material == Items.POTION || material == Items.SPLASH_POTION || material == Items.LINGERING_POTION) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public ItemStack createItemStack() {
+        ItemStack stack = new ItemStack(material);
+        stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal(displayName));
+        if (isPotion(material)) {
+            if (potionContents != null) {
+                stack.set(DataComponentTypes.POTION_CONTENTS, potionContents);
+            } else {
+                int color = getPotionColorByName(displayName);
+                stack.set(DataComponentTypes.POTION_CONTENTS, new PotionContentsComponent(
+                        Optional.empty(),
+                        Optional.of(color),
+                        List.<StatusEffectInstance>of(),
+                        Optional.empty()
+                ));
+            }
+        }
+        if (loreTexts != null && !loreTexts.isEmpty()) {
+            stack.set(DataComponentTypes.LORE, new LoreComponent(loreTexts));
+        }
+        if (hasGlint) {
+            stack.set(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true);
+        }
+        if (nbt != null) {
+            NbtCompound nbtCopy = nbt.copy();
+            if (material == Items.PLAYER_HEAD && nbtCopy.getCompound("SkullOwner").isPresent()) {
+                NbtCompound skullOwner = nbtCopy.getCompound("SkullOwner").get();
+                Optional<int[]> idArray = skullOwner.getIntArray("Id");
+                UUID id;
+                if (idArray.isPresent()) {
+                    int[] arr = idArray.get();
+                    id = uuidFromIntArray(arr);
+                } else {
+                    Optional<String> idString = skullOwner.getString("Id");
+                    id = idString.map(UUID::fromString).orElse(UUID.randomUUID());
+                }
+                ImmutableMultimap.Builder<String, Property> builder = ImmutableMultimap.builder();
+                Optional<NbtCompound> propertiesOpt = skullOwner.getCompound("Properties");
+                if (propertiesOpt.isPresent()) {
+                    NbtCompound properties = propertiesOpt.get();
+                    Optional<NbtList> texturesOpt = properties.getList("textures");
+                    if (texturesOpt.isPresent()) {
+                        NbtList textures = texturesOpt.get();
+                        if (!textures.isEmpty()) {
+                            Optional<NbtCompound> textureNbtOpt = textures.getCompound(0);
+                            if (textureNbtOpt.isPresent()) {
+                                Optional<String> valueOpt = textureNbtOpt.get().getString("Value");
+                                if (valueOpt.isPresent()) {
+                                    builder.put("textures", new Property("textures", valueOpt.get()));
+                                }
+                            }
+                        }
+                    }
+                }
+                PropertyMap propertyMap = new PropertyMap(builder.build());
+                GameProfile profile = new GameProfile(id, "", propertyMap);
+                stack.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(profile));
+                nbtCopy.remove("SkullOwner");
+            }
+            if (!nbtCopy.isEmpty()) {
+                stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbtCopy));
+            }
+        }
+        return stack;
+    }
+
+    private boolean isPotion(Item item) {
+        return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION;
+    }
+
+    private int getPotionColorByName(String name) {
+        return switch (name) {
+            default -> 0x385DC6;
+        };
+    }
+
+    private static UUID uuidFromIntArray(int[] arr) {
+        if (arr.length != 4) {
+            return UUID.randomUUID();
+        }
+        long mostSig = ((long) arr[0] << 32) | (arr[1] & 0xFFFFFFFFL);
+        long leastSig = ((long) arr[2] << 32) | (arr[3] & 0xFFFFFFFFL);
+        return new UUID(mostSig, leastSig);
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public AutoBuyItemSettings getSettings() {
+        return settings;
+    }
+}

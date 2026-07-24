@@ -1,0 +1,29 @@
+{
+  "stats": {
+    "minecraft:picked_up": {
+      "minecraft:netherite_sword": 1
+    },
+    "minecraft:dropped": {
+      "minecraft:arrow": 2,
+      "minecraft:cactus_flower": 1,
+      "minecraft:netherite_sword": 1
+    },
+    "minecraft:used": {
+      "minecraft:netherite_sword": 29
+    },
+    "minecraft:custom": {
+      "minecraft:sprint_one_cm": 10986,
+      "minecraft:time_since_rest": 6853,
+      "minecraft:walk_one_cm": 3212,
+      "minecraft:total_world_time": 6923,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 33972,
+      "minecraft:play_time": 6853,
+      "minecraft:damage_dealt": 3296,
+      "minecraft:jump": 157,
+      "minecraft:time_since_death": 6853,
+      "minecraft:drop": 3
+    }
+  },
+  "DataVersion": 4671
+}

@@ -1,0 +1,39 @@
+{
+  "stats": {
+    "minecraft:killed": {
+      "minecraft:husk": 1
+    },
+    "minecraft:used": {
+      "minecraft:chest": 1,
+      "minecraft:netherite_sword": 40
+    },
+    "minecraft:custom": {
+      "minecraft:interact_with_crafting_table": 1,
+      "minecraft:time_since_rest": 6715,
+      "minecraft:walk_one_cm": 2891,
+      "minecraft:leave_game": 1,
+      "minecraft:mob_kills": 1,
+      "minecraft:play_time": 6715,
+      "minecraft:damage_dealt": 4390,
+      "minecraft:jump": 92,
+      "minecraft:time_since_death": 6715,
+      "minecraft:drop": 3,
+      "minecraft:sprint_one_cm": 5734,
+      "minecraft:open_chest": 5,
+      "minecraft:interact_with_smoker": 1,
+      "minecraft:total_world_time": 6750,
+      "minecraft:fly_one_cm": 41369,
+      "minecraft:crouch_one_cm": 4,
+      "minecraft:sneak_time": 4
+    },
+    "minecraft:picked_up": {
+      "minecraft:cactus_flower": 1,
+      "minecraft:arrow": 2
+    },
+    "minecraft:dropped": {
+      "minecraft:arrow": 2,
+      "minecraft:cactus_flower": 1
+    }
+  },
+  "DataVersion": 4671
+}
